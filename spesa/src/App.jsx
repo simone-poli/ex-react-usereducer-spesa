@@ -19,11 +19,18 @@ const [addedProducts, setAddedProducts] = useState([])
 function addToCard (product) {
     const control = addedProducts.find(cartProduct => cartProduct.name === product.name)
     if  (control) {
-     return 
+     setAddedProducts(prev => prev.map(p => p.name === product.name ? {...p, quantity: p.quantity + 1} : p))
     } else {
       setAddedProducts(prev => [...prev, {...product, quantity:1}] )
     }
 }
+
+
+function removeFromCart (product) {
+    setAddedProducts(prev => prev.filter(p => p.name !== product.name ))
+}
+
+const total = addedProducts.reduce((acc, p) => acc + p.price * p.quantity, 0);
 
   return (
     <>
@@ -49,9 +56,11 @@ function addToCard (product) {
             <p>Nome Prodotto: {p.name}</p>
             <p>Prezzo: {p.price.toFixed(2)}€</p>
             <p>Quantità: {p.quantity}</p>
+            <button onClick={() => removeFromCart(p)}>Rimuovi dal carrello</button>
         </li>
           ))}
       </ul>
+          <h2>Totale da pagare: {total.toFixed(2)}€</h2>
     </>
   )
 }
